@@ -5,7 +5,7 @@ const { MongoClient, ObjectId } = require("mongodb");
 const app = express();
 const PORT = 3000;
 
-const uri = "mongodb+srv://yogesh:yogesh@demo.guun7st.mongodb.net/";
+const uri = "mongodb+srv://@demo.guun7st.mongodb.net/";
 const client = new MongoClient(uri);
 
 app.use(express.json());
