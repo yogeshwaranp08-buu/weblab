@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html ng-app="busApp">
+<head>
+    <title>Bus Ticket Reservation</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body ng-controller="busCtrl">
+
+    <h2>Bus Ticket Reservation System</h2>
+
+    <label>Search Bus:</label>
+    <input type="text" ng-model="searchBus" placeholder="Enter bus name">
+
+    <label>Sort By:</label>
+    <select ng-model="sortBy">
+        <option value="name">Bus Name</option>
+        <option value="number">Bus Number</option>
+        <option value="fare">Bus Fare</option>
+    </select>
+
+    <table >
+        <tr>
+            <th>Bus Name</th>
+            <th>Bus No</th>
+            <th>Route</th>
+            <th>Fare</th>
+            <th>Action</th>
+        </tr>
+
+        <tr ng-repeat="bus in buses | filter:searchBus | orderBy:sortBy">
+            <td>{{bus.name}}</td>
+            <td>{{bus.number}}</td>
+            <td>{{bus.route}}</td>
+            <td>₹{{bus.fare}}</td>
+            <td>
+                <button ng-click="bookTicket(bus)">Book</button>
+            </td>
+        </tr>
+    </table>
+
+    <h3>Book a Ticket</h3>
+
+    Passenger Name:
+    <input type="text" ng-model="passengerName">
+
+    <p>Selected Bus: {{selectedBus.name}}</p>
+    <p>Ticket Fare: ₹{{selectedBus.fare || 0}}</p>
+
+    <button ng-click="confirmBooking()">Confirm Booking</button>
+
+    <h3>{{message}}</h3>
+
+    <script>
+        var app = angular.module("busApp", []);
+
+        // AngularJS Service
+        app.service("busService", function() {
+            this.getBuses = function() {
+                return [
+                    {
+                        name: "SETC",
+                        number: "TN01AB1234",
+                        route: "Madurai - Chennai",
+                        fare: 650
+                    },
+                    {
+                        name: "KPN",
+                        number: "TN02CD5678",
+                        route: "Madurai - Coimbatore",
+                        fare: 450
+                    },
+                    {
+                        name: "Parveen",
+                        number: "TN03EF9012",
+                        route: "Madurai - Trichy",
+                        fare: 250
+                    }
+                ];
+            };
+        });
+
+        // Controller and Functions
+        app.controller("busCtrl", function($scope, busService) {
+
+            $scope.buses = busService.getBuses();
+
+            $scope.selectedBus = {};
+
+            $scope.bookTicket = function(bus) {
+                $scope.selectedBus = bus;
+                $scope.message = "Bus selected successfully!";
+            };
+
+            $scope.confirmBooking = function() {
+                if (!$scope.passengerName || !$scope.selectedBus.name) {
+                    $scope.message = "Enter passenger name and select a bus!";
+                } else {
+                    $scope.message = "Ticket booked successfully for "
+                        + $scope.passengerName + "!";
+                }
+            };
+
+        });
+    </script>
+
+</body>
+</html>
+```

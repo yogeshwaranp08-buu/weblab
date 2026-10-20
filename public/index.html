@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html ng-app="busApp">
+<head>
+    <title>Bus Management System</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body ng-controller="busCtrl">
+
+<h2>Bus Management System</h2>
+
+<h3>Add / Update Bus</h3>
+
+Bus Name:
+<input type="text" ng-model="bus.name"><br><br>
+
+Bus Number:
+<input type="text" ng-model="bus.number"><br><br>
+
+Route:
+<input type="text" ng-model="bus.route"><br><br>
+
+Bus Fare:
+<input type="number" ng-model="bus.fare"><br><br>
+
+<button ng-click="saveBus()">Save Bus</button>
+<button ng-click="clearForm()">Clear</button>
+
+<p>{{message}}</p>
+
+<h3>Bus Details</h3>
+
+Search:
+<input type="text" ng-model="search">
+
+<table >
+<tr>
+    <th>Bus Name</th>
+    <th>Bus Number</th>
+    <th>Route</th>
+    <th>Fare</th>
+    <th>Actions</th>
+</tr>
+
+<tr ng-repeat="b in buses | filter:search">
+    <td>{{b.name}}</td>
+    <td>{{b.number}}</td>
+    <td>{{b.route}}</td>
+    <td>{{b.fare}}</td>
+    <td>
+        <button ng-click="editBus(b)">Edit</button>
+        <button ng-click="deleteBus(b._id)">Delete</button>
+    </td>
+</tr>
+</table>
+
+<script>
+var app = angular.module("busApp", []);
+
+app.controller("busCtrl", function($scope, $http) {
+
+    $scope.bus = {};
+    $scope.buses = [];
+    $scope.editId = null;
+
+    // READ
+    $scope.loadBuses = function() {
+        $http.get("/buses").then(function(response) {
+            $scope.buses = response.data;
+        });
+    };
+
+    // CREATE and UPDATE
+    $scope.saveBus = function() {
+        if (!$scope.bus.name || !$scope.bus.number ||
+            !$scope.bus.route || $scope.bus.fare == null) {
+            $scope.message = "Please fill all fields!";
+            return;
+        }
+
+        if ($scope.editId) {
+            $http.put("/buses/" + $scope.editId, $scope.bus)
+            .then(function(response) {
+                $scope.message = response.data.message;
+                $scope.clearForm();
+                $scope.loadBuses();
+            });
+        } else {
+            $http.post("/buses", $scope.bus)
+            .then(function(response) {
+                $scope.message = response.data.message;
+                $scope.clearForm();
+                $scope.loadBuses();
+            });
+        }
+    };
+
+    // SELECT BUS FOR EDITING
+    $scope.editBus = function(b) {
+        $scope.bus = {
+            name: b.name,
+            number: b.number,
+            route: b.route,
+            fare: b.fare
+        };
+        $scope.editId = b._id;
+        $scope.message = "Edit bus details and click Save Bus";
+    };
+
+    // DELETE
+    $scope.deleteBus = function(id) {
+        if (confirm("Delete this bus?")) {
+            $http.delete("/buses/" + id).then(function(response) {
+                $scope.message = response.data.message;
+                $scope.loadBuses();
+            });
+        }
+    };
+
+    // CLEAR FORM
+    $scope.clearForm = function() {
+        $scope.bus = {};
+        $scope.editId = null;
+    };
+
+    $scope.loadBuses();
+});
+</script>
+
+</body>
+</html>
