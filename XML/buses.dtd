@@ -1,0 +1,6 @@
+<!ELEMENT buses (bus+)>
+<!ELEMENT bus (name, number, route, fare)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT number (#PCDATA)>
+<!ELEMENT route (#PCDATA)>
+<!ELEMENT fare (#PCDATA)>

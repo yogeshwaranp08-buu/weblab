@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?xml-stylesheet type="text/xsl" href="buses.xsl"?>
+
+<!DOCTYPE buses SYSTEM "buses.dtd">
+
+<buses>
+    <bus>
+        <name>SETC</name>
+        <number>TN01AB1234</number>
+        <route>Madurai - Chennai</route>
+        <fare>650</fare>
+    </bus>
+
+    <bus>
+        <name>KPN</name>
+        <number>TN02CD5678</number>
+        <route>Madurai - Coimbatore</route>
+        <fare>450</fare>
+    </bus>
+
+    <bus>
+        <name>Parveen</name>
+        <number>TN03EF9012</number>
+        <route>Madurai - Trichy</route>
+        <fare>250</fare>
+    </bus>
+</buses>
